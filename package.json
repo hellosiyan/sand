@@ -1,0 +1,24 @@
+{
+  "name": "js13k-setup",
+  "private": true,
+  "scripts": {
+    "start": "webpack-dev-server --progress",
+    "build": "webpack -p --progress",
+    "postbuild": "node postbuild.js"
+  },
+  "devDependencies": {
+    "archiver": "^2.1.0",
+    "google-closure-compiler-js": "^20180610.0.0",
+    "gulp": "^3.9.1",
+    "gulp-clean-css": "^3.9.4",
+    "gulp-inline-source": "^3.2.0",
+    "gulp-rename": "^1.4.0",
+    "node-notifier": "^5.2.1",
+    "rollup": "^0.63.4",
+    "rollup-plugin-commonjs": "^9.1.4",
+    "rollup-plugin-node-resolve": "^3.3.0"
+  },
+  "dependencies": {
+    "stats.js": "^0.17.0"
+  }
+}
