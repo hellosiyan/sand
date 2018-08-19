@@ -4,7 +4,6 @@ export const config = {
     size: {
         pixel: pixelSize,
         gridPixels: 30 * pixelSize,
-        aisleHeight: 36 * pixelSize,
     },
     speed: {
         initial: 7 * pixelSize,
@@ -28,5 +27,11 @@ export const config = {
         'A': '#132339',
         'B': '#162c44',
         'C': '#17314a',
+    },
+    palettes: {
+        sand: {
+            '0': '#f8d95a',
+            '1': '#876701',
+        }
     }
 };

@@ -1,13 +1,13 @@
 import SortedContainer from './lib/SortedContainer';
 import { inGridTiles } from './utils';
 
-import TileFloor from './elements/TileFloor';
-import WallBuilder from './WallBuilder';
+import SandTexture from './elements/SandTexture';
+import Obstacle from './Obstacle';
 
 export default class Desert {
     constructor() {
-        this.width = 10;
-        this.height = 10;
+        this.width = 20;
+        this.height = 20;
 
         this.drawable = new SortedContainer().set({
             width: inGridTiles(this.width),
@@ -16,37 +16,62 @@ export default class Desert {
 
         this.createDrawables();
 
-        this.floor = false;
+        this.sand = false;
     }
 
     placeActors(player) {
-        player.x = inGridTiles(5);
-        player.y = inGridTiles(5);
+        player.x = inGridTiles(this.width/2);
+        player.y = inGridTiles(this.height/2);
 
         this.drawable.addChild(player);
     }
 
     createDrawables() {
-        this.drawable.addChild(this.createFloor());
+        this.drawable.addChild(this.createSand());
         this.drawable.addChild(this.createWalls());
     }
 
-    createFloor() {
-        this.floor = new TileFloor();
+    createSand() {
+        this.sand = new SandTexture();
 
-        this.floor.set({
+        this.sand.set({
             x: inGridTiles(1),
             y: inGridTiles(1),
             width: inGridTiles(this.width - 2),
             height: inGridTiles(this.height - 2),
         });
 
-        this.floor.cache();
+        this.sand.cache();
 
-        return this.floor;
+        return this.sand;
     }
 
     createWalls() {
-        return WallBuilder.buildAround(this.floor);
+        return [
+            (new Obstacle()).set({
+                x: this.sand.x + inGridTiles(2),
+                y: this.sand.y + inGridTiles(7),
+                width: this.sand.width - inGridTiles(4),
+                height: inGridTiles(1),
+            }),
+            (new Obstacle()).set({
+                x: this.sand.x + inGridTiles(2),
+                y: this.sand.y + this.sand.height - inGridTiles(2),
+                width: this.sand.width - inGridTiles(4),
+                height: inGridTiles(1),
+            }),
+            (new Obstacle()).set({
+                x: this.sand.x + inGridTiles(2),
+                y: this.sand.y + inGridTiles(7),
+                width: inGridTiles(1),
+                height: this.sand.height - inGridTiles(8),
+            }),
+            (new Obstacle()).set({
+                x: this.sand.x + this.sand.width - inGridTiles(3),
+                y: this.sand.y + inGridTiles(7),
+                width: inGridTiles(1),
+                height: this.sand.height - inGridTiles(8),
+            }),
+        ];
     }
 }
