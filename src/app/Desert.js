@@ -3,6 +3,7 @@ import { inGridTiles } from './utils';
 
 import SandTexture from './elements/SandTexture';
 import Obstacle from './Obstacle';
+import Fusebox from './Fusebox';
 
 export default class Desert {
     constructor() {
@@ -29,6 +30,7 @@ export default class Desert {
     createDrawables() {
         this.drawable.addChild(this.createSand());
         this.drawable.addChild(this.createWalls());
+        this.drawable.addChild(this.createFuseboxes());
     }
 
     createSand() {
@@ -73,5 +75,20 @@ export default class Desert {
                 height: this.sand.height - inGridTiles(8),
             }),
         ];
+    }
+
+    createFuseboxes() {
+        this.fuseboxes = [
+            (new Fusebox()).set({
+                x: this.sand.x + inGridTiles(4),
+                y: this.sand.y + inGridTiles(9),
+            }),
+            (new Fusebox()).set({
+                x: this.sand.x + inGridTiles(7),
+                y: this.sand.y + this.sand.height - inGridTiles(5),
+            }),
+        ];
+
+        return this.fuseboxes;
     }
 }

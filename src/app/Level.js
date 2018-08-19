@@ -5,6 +5,7 @@ import AutoScrollView from './lib/AutoScrollView';
 import Player from './Player';
 import Desert from './Desert';
 import game from './Game';
+import { inGridTiles } from './utils';
 
 export default class Level extends Listenable(Settable()) {
     constructor() {
@@ -42,6 +43,12 @@ export default class Level extends Listenable(Settable()) {
         this.player.move(dt);
 
         this.detectCollisions();
+
+        this.desert.fuseboxes.forEach(fusebox => {
+            if (this.player.distanceTo(fusebox) < inGridTiles(0.5)) {
+                fusebox.activate();
+            }
+        });
 
         game.canvas.draw();
     }
