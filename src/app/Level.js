@@ -6,6 +6,7 @@ import Player from './Player';
 import Desert from './Desert';
 import game from './Game';
 import { inGridTiles } from './utils';
+import eventBus from './lib/EventBus';
 
 export default class Level extends Listenable(Settable()) {
     constructor() {
@@ -29,6 +30,8 @@ export default class Level extends Listenable(Settable()) {
 
         this.startedAt = (new Date()).getTime();
 
+        this.bindEvents();
+
         return this;
     }
 
@@ -37,6 +40,12 @@ export default class Level extends Listenable(Settable()) {
         game.loop.stop();
 
         this.emit('stop');
+    }
+
+    bindEvents() {
+        eventBus.on('fusebox.deactivateAll', () => {
+            this.desert.fuseboxes.forEach(fusebox => fusebox.dectivate())
+        });
     }
 
     loopHandler(dt) {
@@ -49,6 +58,12 @@ export default class Level extends Listenable(Settable()) {
                 fusebox.activate();
             }
         });
+
+        if (this.player.distanceTo(this.desert.controlBoard) < inGridTiles(0.5)) {
+            this.desert.controlBoard.stepOn();
+        } else if (this.player.distanceTo(this.desert.controlBoard) > inGridTiles(0.7)) {
+            this.desert.controlBoard.stepOff();
+        }
 
         game.canvas.draw();
     }

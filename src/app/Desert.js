@@ -4,6 +4,7 @@ import { inGridTiles } from './utils';
 import SandTexture from './elements/SandTexture';
 import Obstacle from './Obstacle';
 import Fusebox from './Fusebox';
+import ControlBoard from './ControlBoard';
 
 export default class Desert {
     constructor() {
@@ -16,13 +17,11 @@ export default class Desert {
         });
 
         this.createDrawables();
-
-        this.sand = false;
     }
 
     placeActors(player) {
-        player.x = inGridTiles(this.width/2);
-        player.y = inGridTiles(this.height/2);
+        player.x = this.sand.x + inGridTiles(6);
+        player.y = this.sand.y + inGridTiles(11);
 
         this.drawable.addChild(player);
     }
@@ -31,6 +30,7 @@ export default class Desert {
         this.drawable.addChild(this.createSand());
         this.drawable.addChild(this.createWalls());
         this.drawable.addChild(this.createFuseboxes());
+        this.drawable.addChild(this.createControlBoard());
     }
 
     createSand() {
@@ -84,11 +84,20 @@ export default class Desert {
                 y: this.sand.y + inGridTiles(9),
             }),
             (new Fusebox()).set({
-                x: this.sand.x + inGridTiles(7),
-                y: this.sand.y + this.sand.height - inGridTiles(5),
+                x: this.sand.x + inGridTiles(6),
+                y: this.sand.y + inGridTiles(9),
             }),
         ];
 
         return this.fuseboxes;
+    }
+
+    createControlBoard() {
+        this.controlBoard = (new ControlBoard()).set({
+            x: this.sand.x + inGridTiles(8),
+            y: this.sand.y + inGridTiles(9),
+        });
+
+        return this.controlBoard;
     }
 }
