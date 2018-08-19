@@ -3,25 +3,17 @@ import Listenable from './lib/Listenable';
 import Container from './lib/Container';
 import AutoScrollView from './lib/AutoScrollView';
 import Player from './Player';
-import Mom from './Mom';
-import Store from './Store';
+import Desert from './Desert';
 import game from './Game';
-import story from './Story';
-import { inGridTiles } from './utils';
 
 export default class Level extends Listenable(Settable()) {
-    constructor(number) {
+    constructor() {
         super();
 
-        this.number = number;
         this.startedAt = 0;
-        this.totalSecondsPlayed = 0;
 
-        this.story = story(this.number);
-
-        this.store = new Store(this.number);
+        this.desert = new Desert();
         this.player = new Player();
-        this.mom = new Mom();
 
         this.drawable = new Container();
 
@@ -43,8 +35,6 @@ export default class Level extends Listenable(Settable()) {
         game.canvas.draw();
         game.loop.stop();
 
-        this.totalSecondsPlayed = Math.ceil(((new Date()).getTime() - this.startedAt) / 1000);
-
         this.emit('stop');
     }
 
@@ -53,26 +43,20 @@ export default class Level extends Listenable(Settable()) {
 
         this.detectCollisions();
 
-        if (this.player.distanceTo(this.mom) < inGridTiles(0.5)) {
-            return this.stop();
-        }
-
         game.canvas.draw();
     }
 
     prepareScene() {
-        this.store.placePeople(this.player, this.mom);
-        this.store.drawable.addChild([this.player, this.mom]);
+        this.desert.placeActors(this.player);
 
         this.drawable.set({
             x: Math.round(game.canvas.width / 2 - this.drawable.width / 2),
             y: Math.round(game.canvas.height / 2 - this.drawable.height / 2),
-            width: inGridTiles(this.store.width),
-            height: inGridTiles(this.store.height),
+            width: game.canvas.width,
+            height: game.canvas.height,
         });
 
-        this.drawable.addChild(this.store.drawable);
-
+        this.drawable.addChild(this.desert.drawable);
 
         this.drawable.addTo(this.view);
 
@@ -91,14 +75,14 @@ export default class Level extends Listenable(Settable()) {
     }
 
     detectCollisions() {
-        const aisles = this.store.drawable.children;
+        const obstacles = this.desert.drawable.children;
 
-        aisles.forEach(aisle => {
-            if (! aisle.collidable || ! this.player.intersects(aisle)) {
+        obstacles.forEach(obstacle => {
+            if (! obstacle.collidable || ! this.player.intersects(obstacle)) {
                 return;
             }
 
-            let cri = this.player.collisionResponseImpulse(aisle);
+            let cri = this.player.collisionResponseImpulse(obstacle);
 
             this.player.x += cri.x;
             this.player.y += cri.y;

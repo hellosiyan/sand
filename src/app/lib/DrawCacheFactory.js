@@ -1,5 +1,4 @@
 import Canvas from './Canvas';
-import Drawable from './Drawable';
 
 const maxPadIterations = 20;
 const padRestictions = {

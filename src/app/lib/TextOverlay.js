@@ -9,7 +9,7 @@ export default class TextOverlay extends Listenable() {
         this.node.classList.add('text-overlay');
         this.node.innerHTML = '{{placeholder}}';
 
-        this.nextKeys = [io.KEY_SPACE, io.KEY_ESC, io.KEY_ENTER];
+        this.nextKeys = [io.KEY_SPACE];
     }
 
     setText(text) {
@@ -21,7 +21,7 @@ export default class TextOverlay extends Listenable() {
     withHowTo() {
         let howtoNode = document.createElement('p');
         howtoNode.classList.add('right');
-        howtoNode.innerHTML = '<small>Press <strong>esc</strong>, <strong>space</strong>, or <strong>enter</strong> to continue</small>';
+        howtoNode.innerHTML = '<small>Press <strong>[space]</strong> to continue</small>';
 
         this.node.appendChild(howtoNode);
 

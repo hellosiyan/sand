@@ -1,4 +1,3 @@
 import game from './Game';
 
-game.init();
-game.start();
+game.init().start();

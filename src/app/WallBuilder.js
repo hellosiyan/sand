@@ -1,5 +1,4 @@
 import Wall from './elements/Wall';
-import Corner from './elements/Corner';
 
 export default class WallBuilder {
     constructor() {
@@ -67,10 +66,8 @@ export default class WallBuilder {
         }
 
         const nextWallType = this.direction == 'right' ? 'right' : 'left';
-        const cornerType = this.direction + 'Bottom';
 
         this.nextWall(nextWallType);
-        this.pushCorner(cornerType);
 
         return this;
     }
@@ -85,10 +82,8 @@ export default class WallBuilder {
         }
 
         const nextWallType = this.direction == 'right' ? 'right' : 'left';
-        const cornerType = this.direction + 'Top';
 
         this.nextWall(nextWallType);
-        this.pushCorner(cornerType);
 
         return this;
     }
@@ -103,10 +98,8 @@ export default class WallBuilder {
         }
 
         const nextWallType = this.direction == 'up' ? 'top' : 'bottom';
-        const cornerType = this.direction == 'up' ? 'rightTop' : 'rightBottom';
 
         this.nextWall(nextWallType);
-        this.pushCorner(cornerType);
 
         return this;
     }
@@ -121,10 +114,8 @@ export default class WallBuilder {
         }
 
         const nextWallType = this.direction == 'up' ? 'top' : 'bottom';
-        const cornerType = this.direction == 'up' ? 'leftTop' : 'leftBottom';
 
         this.nextWall(nextWallType);
-        this.pushCorner(cornerType);
 
         return this;
     }
@@ -133,19 +124,8 @@ export default class WallBuilder {
         return this.builtDrawbles;
     }
 
-    pushCorner(type) {
-        this.builtDrawbles.push(
-            new Corner()
-                .setType(type)
-                .placeAt(this.pointer)
-                .assemble()
-        );
-
-        return this;
-    }
-
     nextWall(type) {
-        this.builtDrawbles.push(this.currentWall.assemble());
+        this.builtDrawbles.push(this.currentWall);
 
         this.currentWall = new Wall()
             .setType(type)

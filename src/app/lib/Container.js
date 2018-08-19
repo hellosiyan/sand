@@ -24,7 +24,7 @@ export default class Container extends Drawable {
     removeChild (child) {
         if (! this.children.includes(child)) return false;
 
-        this.children.splice(index, 1);
+        this.children.splice(this.children.indexOf(child), 1);
 
         return true;
     }

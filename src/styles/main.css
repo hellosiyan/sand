@@ -5,10 +5,11 @@ body {
   margin: 0;
   padding: 0;
   font-family: Helvetica Neue,Helvetica,Arial,sans-serif;
+  background-color: hsla(210,63%,6%,1);
 }
 
 body {
-  background-color: #333;
+  /*background-color: #333;*/
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr auto 1fr;
@@ -23,6 +24,7 @@ canvas {
 	outline: 1px solid black;
 	margin: 0 auto;
 	grid-area: main;
+    background-color: #fff;
 }
 
 .text-overlay {

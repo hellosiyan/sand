@@ -2,10 +2,8 @@ import { config } from './config';
 
 import NumberSequence from './lib/NumberSequence';
 import Loop from './lib/Loop';
-import IO from './lib/IO';
 import Canvas from './lib/Canvas';
 import Container from './lib/Container';
-import Color from './lib/Color';
 import TextOverlay from './lib/TextOverlay';
 
 import Level from './Level';
@@ -15,54 +13,36 @@ class Game {
         this.prngs = {};
         this.canvas = null;
         this.scene = null;
-
-        this.levelNumber = 1;
         this.level = null;
-        this.howtoShown = false;
     }
 
     init() {
-        this.initCanvas();
         this.initPrngs();
+        this.initCanvas();
         this.initLoop();
+
+        return this;
     }
 
     start() {
-        return TextOverlay.display('<h2 class="center">Ghost Goes Lost</h2>')
+        return TextOverlay.display('<h2 class="center">js13kGames 2018</h2>')
             .withHowTo()
-            .on('hide', () => this.playLevel(this.levelNumber));
+            .on('hide', () => this.playLevel());
     }
 
-    nextLevel() {
-        this.playLevel(this.levelNumber + 1);
-    }
-
-    playLevel(levelNumber) {
-        this.levelNumber = levelNumber;
-        this.level = new Level(this.levelNumber);
-
-        TextOverlay.display(this.level.story)
-            .on('hide', () => {
-            this.level.start()
-                .on('stop', () => {
-                    TextOverlay.display('<p>Charlie was lost for <strong>' + this.level.totalSecondsPlayed + ' seconds</strong></p>')
-                        .on('hide', () => this.nextLevel());
-                });
-        });
+    playLevel() {
+        this.level = new Level();
+        this.level.start();
     }
 
     initCanvas() {
         this.canvas = new Canvas();
-        this.canvas.setSize(400, 300);
+        this.canvas.setSize(800, 600);
 
         this.scene = new Container().set({
             width: this.canvas.width,
             height: this.canvas.height,
         });
-
-        let bgColor = Color.fromHex(config.palette['b']).darken(0.7).toString();
-        this.canvas.node.style.backgroundColor = bgColor;
-        document.body.style.backgroundColor = bgColor;
 
         this.canvas.setScene(this.scene);
         this.canvas.appendTo(document.body);
