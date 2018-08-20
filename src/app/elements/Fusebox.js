@@ -1,8 +1,6 @@
-import Drawable from '../lib/Drawable';
 import Container from '../lib/Container';
 import Pixmap from '../Pixmap';
 import Rune from './Rune';
-import game from '../Game';
 import { config } from '../config';
 import { inPixels } from '../utils';
 

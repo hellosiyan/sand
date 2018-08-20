@@ -1,8 +1,7 @@
 import Container from './lib/Container';
 import Collidable from './lib/Collidable';
 import Rectangle from './lib/Rectangle';
-import eventBus from './lib/EventBus';
-import game from './Game';
+import state from './State';
 import { inGridTiles, inPixels } from './utils';
 import { config } from './config';
 
@@ -42,7 +41,7 @@ export default class ControlBoard extends Collidable(Container) {
         this.addChild(this.lamp);
 
         this.lettersEntered = '';
-        eventBus.on('fusebox.activated', letter => {
+        state.events.on('fusebox.activated', letter => {
             this.lettersEntered += letter;
         });
     }
@@ -68,17 +67,17 @@ export default class ControlBoard extends Collidable(Container) {
 
         this.lettersEntered = '';
 
-        eventBus.emit('fusebox.deactivateAll');
+        state.events.emit('fusebox.deactivateAll');
     }
 
     checkCorrect() {
-        let correct = this.lettersEntered == game.level.desert.messagePort.getLetters();
+        let correct = this.lettersEntered == state.messagePort.getLetters();
 
         if (correct) {
-            eventBus.emit('controlboard.correct');
+            state.events.emit('controlboard.correct');
             this.lamp.setStyle({color: '#0f0'});
         } else {
-            eventBus.emit('controlboard.incorrect');
+            state.events.emit('controlboard.incorrect');
             this.lamp.setStyle({color: '#f00'});
         }
     }

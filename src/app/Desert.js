@@ -6,6 +6,7 @@ import Obstacle from './Obstacle';
 import Fusebox from './Fusebox';
 import ControlBoard from './ControlBoard';
 import MessagePort from './MessagePort';
+import state from './State';
 
 export default class Desert {
     constructor() {
@@ -108,10 +109,16 @@ export default class Desert {
     }
 
     createMessagePort() {
+        if (this.messagePort) {
+            return this.messagePort;
+        }
+
         this.messagePort = (new MessagePort()).set({
             x: this.sand.x + inGridTiles(11),
             y: this.sand.y + inGridTiles(10),
         }).setLetters('a');
+
+        state.messagePort = this.messagePort;
 
         return this.messagePort;
     }

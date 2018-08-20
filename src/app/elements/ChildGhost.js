@@ -1,6 +1,6 @@
 import Drawable from '../lib/Drawable';
 import Pixmap from '../Pixmap';
-import game from '../Game';
+import state from '../State';
 import { config } from '../config';
 
 const pixmaps = {
@@ -86,7 +86,7 @@ export default class ChildGhost extends Drawable {
     draw(ctx) {
         const spriteName = this.direction.y == 'up' ? 'back' : 'front';
 
-        this.levitationTimeInterval = (this.levitationTimeInterval + game.loop.dt) % 2;
+        this.levitationTimeInterval = (this.levitationTimeInterval + state.loop.dt) % 2;
         const levitationHeightRatio = Math.abs(this.levitationTimeInterval - 1) * 0.2;
         const levitationY = Math.round(levitationHeightRatio * this.height);
 

@@ -1,7 +1,5 @@
 import Container from './lib/Container';
 import Collidable from './lib/Collidable';
-import eventBus from './lib/EventBus';
-import FuseboxElement from './elements/Fusebox';
 import Rune from './elements/Rune';
 import { inGridTiles, inPixels } from './utils';
 import { config } from './config';

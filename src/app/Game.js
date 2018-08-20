@@ -7,6 +7,7 @@ import Container from './lib/Container';
 import TextOverlay from './lib/TextOverlay';
 
 import Level from './Level';
+import state from './State';
 
 class Game {
     constructor() {
@@ -33,6 +34,8 @@ class Game {
     playLevel() {
         this.level = new Level();
         this.level.start();
+
+        state.level = this.level;
     }
 
     initCanvas() {
@@ -46,11 +49,15 @@ class Game {
 
         this.canvas.setScene(this.scene);
         this.canvas.appendTo(document.body);
+
+        state.canvas = this.canvas;
     }
 
     initLoop() {
         this.loop = new Loop();
         this.loop.stats(true);
+
+        state.loop = this.loop;
     }
 
     initPrngs() {

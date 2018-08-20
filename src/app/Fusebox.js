@@ -1,5 +1,5 @@
 import Container from './lib/Container';
-import eventBus from './lib/EventBus';
+import state from './State';
 import { inGridTiles, inPixels } from './utils';
 import FuseboxElement from './elements/Fusebox';
 import { config } from './config';
@@ -42,7 +42,7 @@ export default class Fusebox extends Container {
 
         this.isActive = true;
 
-        eventBus.emit('fusebox.activated', this.element.rune.letter);
+        state.events.emit('fusebox.activated', this.element.rune.letter);
 
         return this;
     }

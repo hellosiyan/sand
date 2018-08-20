@@ -4,9 +4,8 @@ import Container from './lib/Container';
 import AutoScrollView from './lib/AutoScrollView';
 import Player from './Player';
 import Desert from './Desert';
-import game from './Game';
 import { inGridTiles } from './utils';
-import eventBus from './lib/EventBus';
+import state from './State';
 
 export default class Level extends Listenable(Settable()) {
     constructor() {
@@ -26,8 +25,8 @@ export default class Level extends Listenable(Settable()) {
     start() {
         this.prepareScene();
 
-        game.canvas.setScene(this.view);
-        game.loop.start(dt => this.loopHandler(dt));
+        state.canvas.setScene(this.view);
+        state.loop.start(dt => this.loopHandler(dt));
 
         this.startedAt = (new Date()).getTime();
 
@@ -37,20 +36,20 @@ export default class Level extends Listenable(Settable()) {
     }
 
     stop() {
-        game.canvas.draw();
-        game.loop.stop();
+        state.canvas.draw();
+        state.loop.stop();
 
         this.emit('stop');
     }
 
     bindEvents() {
-        eventBus.on('fusebox.deactivateAll', () => {
+        state.events.on('fusebox.deactivateAll', () => {
             this.desert.fuseboxes.forEach(fusebox => fusebox.dectivate())
         });
 
         const levels = ['a', 'ba', 'cab'];
 
-        eventBus.on('controlboard.correct', () => {
+        state.events.on('controlboard.correct', () => {
             this.level ++;
 
             this.desert.messagePort.setLetters(levels[this.level - 1]);
@@ -74,17 +73,17 @@ export default class Level extends Listenable(Settable()) {
             this.desert.controlBoard.stepOff();
         }
 
-        game.canvas.draw();
+        state.canvas.draw();
     }
 
     prepareScene() {
         this.desert.placeActors(this.player);
 
         this.drawable.set({
-            x: Math.round(game.canvas.width / 2 - this.drawable.width / 2),
-            y: Math.round(game.canvas.height / 2 - this.drawable.height / 2),
-            width: game.canvas.width,
-            height: game.canvas.height,
+            x: Math.round(state.canvas.width / 2 - this.drawable.width / 2),
+            y: Math.round(state.canvas.height / 2 - this.drawable.height / 2),
+            width: state.canvas.width,
+            height: state.canvas.height,
         });
 
         this.drawable.addChild(this.desert.drawable);
@@ -92,8 +91,8 @@ export default class Level extends Listenable(Settable()) {
         this.drawable.addTo(this.view);
 
         this.view.set({
-            width: game.canvas.width,
-            height: game.canvas.height,
+            width: state.canvas.width,
+            height: state.canvas.height,
             target: this.player,
         });
 
