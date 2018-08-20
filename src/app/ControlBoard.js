@@ -1,9 +1,10 @@
 import Container from './lib/Container';
 import Collidable from './lib/Collidable';
 import Rectangle from './lib/Rectangle';
+import eventBus from './lib/EventBus';
+import game from './Game';
 import { inGridTiles, inPixels } from './utils';
 import { config } from './config';
-import eventBus from './lib/EventBus';
 
 export default class ControlBoard extends Collidable(Container) {
     constructor() {
@@ -21,17 +22,17 @@ export default class ControlBoard extends Collidable(Container) {
                 y: this.height,
             })
             .setStyle({
-                color: '#f00'
+                color: '#183c66'
             })
             .alignWith(this.innerBox)
-            .centerVertically();
+            .centerHorizontally();
 
         this.lamp = new Rectangle()
             .set({
-                x: inPixels(3),
-                y: inPixels(3),
-                width: inPixels(2),
-                height: inPixels(2),
+                x: inPixels(4),
+                y: inPixels(4),
+                width: inPixels(52),
+                height: inPixels(22),
             })
             .setStyle({
                 color: '#666'
@@ -39,6 +40,11 @@ export default class ControlBoard extends Collidable(Container) {
 
         this.addChild(this.plate);
         this.addChild(this.lamp);
+
+        this.lettersEntered = '';
+        eventBus.on('fusebox.activated', letter => {
+            this.lettersEntered += letter;
+        });
     }
 
     stepOn() {
@@ -47,7 +53,7 @@ export default class ControlBoard extends Collidable(Container) {
         }
 
         this.steppedOn = true;
-        this.plate.setStyle({color: '#0f0'});
+        this.plate.setStyle({color: '#04b7e9'});
         this.checkCorrect();
     }
 
@@ -57,18 +63,22 @@ export default class ControlBoard extends Collidable(Container) {
         }
 
         this.steppedOn = false;
-        this.plate.setStyle({color: '#f00'});
+        this.plate.setStyle({color: '#183c66'});
         this.lamp.setStyle({color: '#666'});
+
+        this.lettersEntered = '';
 
         eventBus.emit('fusebox.deactivateAll');
     }
 
     checkCorrect() {
-        let correct = true;
+        let correct = this.lettersEntered == game.level.desert.messagePort.getLetters();
 
         if (correct) {
+            eventBus.emit('controlboard.correct');
             this.lamp.setStyle({color: '#0f0'});
         } else {
+            eventBus.emit('controlboard.incorrect');
             this.lamp.setStyle({color: '#f00'});
         }
     }

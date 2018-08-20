@@ -24,7 +24,20 @@ export default class Align {
     }
 
     centerVertically() {
+        this.target.y = Math.round(this.base.y + this.base.height / 2 - this.target.height / 2);
+
+        return this.target;
+    }
+
+    centerHorizontally() {
         this.target.x = Math.round(this.base.x + this.base.width / 2 - this.target.width / 2);
+
+        return this.target;
+    }
+
+    center() {
+        this.centerVertically();
+        this.centerHorizontally();
 
         return this.target;
     }

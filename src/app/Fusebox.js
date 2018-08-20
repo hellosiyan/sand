@@ -1,4 +1,5 @@
 import Container from './lib/Container';
+import eventBus from './lib/EventBus';
 import { inGridTiles, inPixels } from './utils';
 import FuseboxElement from './elements/Fusebox';
 import { config } from './config';
@@ -28,13 +29,29 @@ export default class Fusebox extends Container {
         super.draw(ctx);
     }
 
+    setLetter(letter) {
+        this.element.rune.letter = letter;
+
+        return this;
+    }
+
     activate() {
+        if (this.isActive) {
+            return;
+        }
+
         this.isActive = true;
+
+        eventBus.emit('fusebox.activated', this.element.rune.letter);
 
         return this;
     }
 
     dectivate() {
+        if (! this.isActive) {
+            return;
+        }
+
         this.isActive = false;
 
         return this;

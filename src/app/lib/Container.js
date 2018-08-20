@@ -29,6 +29,12 @@ export default class Container extends Drawable {
         return true;
     }
 
+    empty () {
+        this.children = [];
+
+        return true;
+    }
+
     draw (ctx) {
         this.drawChildren(ctx);
     }

@@ -12,6 +12,7 @@ export default class Level extends Listenable(Settable()) {
     constructor() {
         super();
 
+        this.level = 1;
         this.startedAt = 0;
 
         this.desert = new Desert();
@@ -45,6 +46,14 @@ export default class Level extends Listenable(Settable()) {
     bindEvents() {
         eventBus.on('fusebox.deactivateAll', () => {
             this.desert.fuseboxes.forEach(fusebox => fusebox.dectivate())
+        });
+
+        const levels = ['a', 'ba', 'cab'];
+
+        eventBus.on('controlboard.correct', () => {
+            this.level ++;
+
+            this.desert.messagePort.setLetters(levels[this.level - 1]);
         });
     }
 

@@ -5,6 +5,7 @@ import SandTexture from './elements/SandTexture';
 import Obstacle from './Obstacle';
 import Fusebox from './Fusebox';
 import ControlBoard from './ControlBoard';
+import MessagePort from './MessagePort';
 
 export default class Desert {
     constructor() {
@@ -20,8 +21,8 @@ export default class Desert {
     }
 
     placeActors(player) {
-        player.x = this.sand.x + inGridTiles(6);
-        player.y = this.sand.y + inGridTiles(11);
+        player.x = this.sand.x + inGridTiles(10);
+        player.y = this.sand.y + inGridTiles(13);
 
         this.drawable.addChild(player);
     }
@@ -31,6 +32,7 @@ export default class Desert {
         this.drawable.addChild(this.createWalls());
         this.drawable.addChild(this.createFuseboxes());
         this.drawable.addChild(this.createControlBoard());
+        this.drawable.addChild(this.createMessagePort());
     }
 
     createSand() {
@@ -79,13 +81,17 @@ export default class Desert {
 
     createFuseboxes() {
         this.fuseboxes = [
-            (new Fusebox()).set({
+            (new Fusebox()).setLetter('a').set({
                 x: this.sand.x + inGridTiles(4),
-                y: this.sand.y + inGridTiles(9),
+                y: this.sand.y + inGridTiles(10),
             }),
-            (new Fusebox()).set({
+            (new Fusebox()).setLetter('b').set({
                 x: this.sand.x + inGridTiles(6),
-                y: this.sand.y + inGridTiles(9),
+                y: this.sand.y + inGridTiles(10),
+            }),
+            (new Fusebox()).setLetter('c').set({
+                x: this.sand.x + inGridTiles(4),
+                y: this.sand.y + inGridTiles(12),
             }),
         ];
 
@@ -99,5 +105,14 @@ export default class Desert {
         });
 
         return this.controlBoard;
+    }
+
+    createMessagePort() {
+        this.messagePort = (new MessagePort()).set({
+            x: this.sand.x + inGridTiles(11),
+            y: this.sand.y + inGridTiles(10),
+        }).setLetters('a');
+
+        return this.messagePort;
     }
 }
