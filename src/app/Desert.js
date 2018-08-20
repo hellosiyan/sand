@@ -7,6 +7,7 @@ import Fusebox from './Fusebox';
 import ControlBoard from './ControlBoard';
 import ControlBoardPlate from './ControlBoardPlate';
 import MessagePort from './MessagePort';
+import MessagePortPlate from './MessagePortPlate';
 import state from './State';
 
 export default class Desert {
@@ -120,17 +121,25 @@ export default class Desert {
     }
 
     createMessagePort() {
-        if (this.messagePort) {
-            return this.messagePort;
+        if (state.messagePort) {
+            return state.messagePort;
         }
 
-        this.messagePort = (new MessagePort()).set({
+        state.messagePort = (new MessagePort()).set({
             x: this.sand.x + inGridTiles(11),
             y: this.sand.y + inGridTiles(10),
         }).setLetters('a');
 
-        state.messagePort = this.messagePort;
+        state.messagePortPlate = (new MessagePortPlate()).set({
+            x: state.messagePort.x,
+            y: state.messagePort.y + state.messagePort.height,
+            width: state.messagePort.width,
+            height: inGridTiles(0.5),
+        });
 
-        return this.messagePort;
+        return [
+            state.messagePort,
+            state.messagePortPlate
+        ];
     }
 }

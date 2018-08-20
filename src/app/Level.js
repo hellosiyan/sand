@@ -47,12 +47,12 @@ export default class Level extends Listenable(Settable()) {
             this.desert.fuseboxes.forEach(fusebox => fusebox.dectivate())
         });
 
-        const levels = ['a', 'ba', 'cab'];
-
         state.events.on('controlboard.correct', () => {
+            const levels = ['a', 'ba', 'cab'];
+
             this.level ++;
 
-            this.desert.messagePort.setLetters(levels[this.level - 1]);
+            state.messagePort.setLetters(levels[this.level - 1]);
         });
     }
 
@@ -60,18 +60,7 @@ export default class Level extends Listenable(Settable()) {
         this.player.move(dt);
 
         this.detectCollisions();
-
-        state.fuseboxes.forEach(fusebox => {
-            if (this.player.intersects(fusebox)) {
-                fusebox.activate();
-            }
-        });
-
-        if (this.player.intersects(state.controlBoardPlate)) {
-            state.controlBoardPlate.stepOn();
-        } else {
-            state.controlBoardPlate.stepOff();
-        }
+        this.detectActivatedPressurePlates();
 
         state.canvas.draw();
     }
@@ -117,5 +106,25 @@ export default class Level extends Listenable(Settable()) {
             this.player.x += cri.x;
             this.player.y += cri.y;
         });
+    }
+
+    detectActivatedPressurePlates() {
+        state.fuseboxes.forEach(fusebox => {
+            if (this.player.intersects(fusebox)) {
+                fusebox.activate();
+            }
+        });
+
+        if (this.player.intersects(state.controlBoardPlate)) {
+            state.controlBoardPlate.stepOn();
+        } else {
+            state.controlBoardPlate.stepOff();
+        }
+
+        if (this.player.intersects(state.messagePortPlate)) {
+            state.messagePortPlate.stepOn();
+        } else {
+            state.messagePortPlate.stepOff();
+        }
     }
 }

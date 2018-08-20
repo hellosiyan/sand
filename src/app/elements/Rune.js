@@ -58,6 +58,9 @@ export default class Rune extends Drawable {
         const drawable = pixmaps[this.letter];
         drawable.x = this.x;
         drawable.y = this.y;
+
+        ctx.globalAlpha = this.style.opacity;
+
         drawable.draw(ctx);
     }
 }

@@ -3,6 +3,7 @@ import Collidable from './lib/Collidable';
 import Rune from './elements/Rune';
 import { inGridTiles, inPixels } from './utils';
 import { config } from './config';
+import state from './State';
 
 export default class MessagePort extends Collidable(Container) {
     constructor() {
@@ -13,6 +14,14 @@ export default class MessagePort extends Collidable(Container) {
 
         this.letters = '';
         this.runes = [];
+
+        state.events.on('messagePortPlate.stepOn', () => {
+            this.runes.forEach(rune => rune.style.opacity = 1);
+        });
+
+        state.events.on('messagePortPlate.stepOff', () => {
+            this.runes.forEach(rune => rune.style.opacity = 0);
+        });
     }
 
     draw(ctx) {
@@ -35,7 +44,7 @@ export default class MessagePort extends Collidable(Container) {
                 x: inPixels(8 + 12 * this.runes.length),
                 y: inPixels(11),
                 letter: letter
-            });
+            }).setStyle({opacity: 0});
 
             this.runes.push(rune);
             this.addChild(rune);
