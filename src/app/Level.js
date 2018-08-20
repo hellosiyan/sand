@@ -61,16 +61,16 @@ export default class Level extends Listenable(Settable()) {
 
         this.detectCollisions();
 
-        this.desert.fuseboxes.forEach(fusebox => {
-            if (this.player.distanceTo(fusebox) < inGridTiles(0.5)) {
+        state.fuseboxes.forEach(fusebox => {
+            if (this.player.intersects(fusebox)) {
                 fusebox.activate();
             }
         });
 
-        if (this.player.distanceTo(this.desert.controlBoard) < inGridTiles(0.5)) {
-            this.desert.controlBoard.stepOn();
-        } else if (this.player.distanceTo(this.desert.controlBoard) > inGridTiles(0.7)) {
-            this.desert.controlBoard.stepOff();
+        if (this.player.intersects(state.controlBoardPlate)) {
+            state.controlBoardPlate.stepOn();
+        } else {
+            state.controlBoardPlate.stepOff();
         }
 
         state.canvas.draw();

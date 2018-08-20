@@ -24,6 +24,9 @@ export default class Player extends Movable(Container) {
     draw(ctx) {
         this.ghost.setDirection(this.direction);
 
+        ctx.fillStyle = 'rgba(0, 0, 255, 0.5)';
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+
         super.draw(ctx);
     }
 

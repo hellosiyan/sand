@@ -5,6 +5,7 @@ import SandTexture from './elements/SandTexture';
 import Obstacle from './Obstacle';
 import Fusebox from './Fusebox';
 import ControlBoard from './ControlBoard';
+import ControlBoardPlate from './ControlBoardPlate';
 import MessagePort from './MessagePort';
 import state from './State';
 
@@ -96,16 +97,26 @@ export default class Desert {
             }),
         ];
 
+        state.fuseboxes = this.fuseboxes;
+
         return this.fuseboxes;
     }
 
     createControlBoard() {
-        this.controlBoard = (new ControlBoard()).set({
+        state.controlBoard = (new ControlBoard()).set({
             x: this.sand.x + inGridTiles(8),
             y: this.sand.y + inGridTiles(9),
         });
+        state.controlBoardPlate = (new ControlBoardPlate()).set({
+            x: state.controlBoard.x,
+            y: state.controlBoard.y + state.controlBoard.height,
+            width: state.controlBoard.width
+        });
 
-        return this.controlBoard;
+        return [
+            state.controlBoard,
+            state.controlBoardPlate,
+        ];
     }
 
     createMessagePort() {
