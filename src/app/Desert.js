@@ -24,60 +24,60 @@ export default class Desert {
     }
 
     placeActors(player) {
-        player.x = this.sand.x + inGridTiles(10);
-        player.y = this.sand.y + inGridTiles(13);
+        player.x = this.ground.x + inGridTiles(10);
+        player.y = this.ground.y + inGridTiles(13);
 
         this.drawable.addChild(player);
     }
 
     createDrawables() {
-        this.drawable.addChild(this.createSand());
+        this.drawable.addChild(this.createGround());
         this.drawable.addChild(this.createWalls());
         this.drawable.addChild(this.createFuseboxes());
         this.drawable.addChild(this.createControlBoard());
         this.drawable.addChild(this.createMessagePort());
     }
 
-    createSand() {
-        this.sand = new SandTexture();
+    createGround() {
+        this.ground = new SandTexture();
 
-        this.sand.set({
+        this.ground.set({
             x: inGridTiles(1),
             y: inGridTiles(1),
             width: inGridTiles(this.width - 2),
             height: inGridTiles(this.height - 2),
         });
 
-        this.sand.cache();
+        this.ground.cache();
 
-        return this.sand;
+        return this.ground;
     }
 
     createWalls() {
         return [
             (new Obstacle()).set({
-                x: this.sand.x + inGridTiles(2),
-                y: this.sand.y + inGridTiles(7),
-                width: this.sand.width - inGridTiles(4),
+                x: this.ground.x + inGridTiles(2),
+                y: this.ground.y + inGridTiles(7),
+                width: this.ground.width - inGridTiles(4),
                 height: inGridTiles(1),
             }),
             (new Obstacle()).set({
-                x: this.sand.x + inGridTiles(2),
-                y: this.sand.y + this.sand.height - inGridTiles(2),
-                width: this.sand.width - inGridTiles(4),
+                x: this.ground.x + inGridTiles(2),
+                y: this.ground.y + this.ground.height - inGridTiles(2),
+                width: this.ground.width - inGridTiles(4),
                 height: inGridTiles(1),
             }),
             (new Obstacle()).set({
-                x: this.sand.x + inGridTiles(2),
-                y: this.sand.y + inGridTiles(7),
+                x: this.ground.x + inGridTiles(2),
+                y: this.ground.y + inGridTiles(7),
                 width: inGridTiles(1),
-                height: this.sand.height - inGridTiles(8),
+                height: this.ground.height - inGridTiles(8),
             }),
             (new Obstacle()).set({
-                x: this.sand.x + this.sand.width - inGridTiles(3),
-                y: this.sand.y + inGridTiles(7),
+                x: this.ground.x + this.ground.width - inGridTiles(3),
+                y: this.ground.y + inGridTiles(7),
                 width: inGridTiles(1),
-                height: this.sand.height - inGridTiles(8),
+                height: this.ground.height - inGridTiles(8),
             }),
         ];
     }
@@ -85,16 +85,16 @@ export default class Desert {
     createFuseboxes() {
         this.fuseboxes = [
             (new Fusebox()).setLetter('a').set({
-                x: this.sand.x + inGridTiles(4),
-                y: this.sand.y + inGridTiles(10),
+                x: this.ground.x + inGridTiles(4),
+                y: this.ground.y + inGridTiles(10),
             }),
             (new Fusebox()).setLetter('b').set({
-                x: this.sand.x + inGridTiles(6),
-                y: this.sand.y + inGridTiles(10),
+                x: this.ground.x + inGridTiles(6),
+                y: this.ground.y + inGridTiles(10),
             }),
             (new Fusebox()).setLetter('c').set({
-                x: this.sand.x + inGridTiles(4),
-                y: this.sand.y + inGridTiles(12),
+                x: this.ground.x + inGridTiles(4),
+                y: this.ground.y + inGridTiles(12),
             }),
         ];
 
@@ -105,8 +105,8 @@ export default class Desert {
 
     createControlBoard() {
         state.controlBoard = (new ControlBoard()).set({
-            x: this.sand.x + inGridTiles(8),
-            y: this.sand.y + inGridTiles(9),
+            x: this.ground.x + inGridTiles(8),
+            y: this.ground.y + inGridTiles(9),
         });
         state.controlBoardPlate = (new ControlBoardPlate()).set({
             x: state.controlBoard.x,
@@ -126,8 +126,8 @@ export default class Desert {
         }
 
         state.messagePort = (new MessagePort()).set({
-            x: this.sand.x + inGridTiles(11),
-            y: this.sand.y + inGridTiles(10),
+            x: this.ground.x + inGridTiles(11),
+            y: this.ground.y + inGridTiles(10),
         }).setLetters('a');
 
         state.messagePortPlate = (new MessagePortPlate()).set({

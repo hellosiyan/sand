@@ -14,11 +14,11 @@ export default class AutoScrollView extends Container {
     }
 
     addChild (child) {
-        super.addChild(child);
-
-        if (this.children.length > 1) {
+        if (this.children.length >= 1) {
             throw 'AutoScrollView cannot have more than one child';
         }
+
+        super.addChild(child);
     }
 
     draw (ctx) {
@@ -29,27 +29,28 @@ export default class AutoScrollView extends Container {
 
     moveTargetIntoView() {
         const coords = this.target.positionAtAncestor(this);
+        const child = this.children[0];
 
         if (this.target.width < this.boundries.right - this.boundries.left ) {
             if (coords.x < this.boundries.left) {
-                this.children[0].x += this.boundries.left - coords.x;
+                child.x += this.boundries.left - coords.x;
             } else if (coords.x + this.target.width > this.boundries.right) {
-                this.children[0].x -= coords.x + this.target.width - this.boundries.right;
+                child.x -= coords.x + this.target.width - this.boundries.right;
             }
         } else {
             // Target is wider than allowed zone - default to left align
-            this.children[0].x += this.boundries.left - coords.x;
+            child.x += this.boundries.left - coords.x;
         }
 
         if (this.target.height < this.boundries.bottom - this.boundries.top ) {
             if (coords.y < this.boundries.top) {
-                this.children[0].y += this.boundries.top - coords.y;
+                child.y += this.boundries.top - coords.y;
             } else if (coords.y + this.target.height > this.boundries.bottom) {
-                this.children[0].y -= coords.y + this.target.height - this.boundries.bottom;
+                child.y -= coords.y + this.target.height - this.boundries.bottom;
             }
         } else {
             // Target is higher than allowed zone - default to top align
-            this.children[0].y += this.boundries.top - coords.y;
+            child.y += this.boundries.top - coords.y;
         }
     }
 }

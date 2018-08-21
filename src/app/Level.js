@@ -2,6 +2,7 @@ import Settable from './lib/Settable';
 import Listenable from './lib/Listenable';
 import Container from './lib/Container';
 import AutoScrollView from './lib/AutoScrollView';
+import Rectangle from './lib/Rectangle';
 import Player from './Player';
 import Desert from './Desert';
 import { inGridTiles } from './utils';
