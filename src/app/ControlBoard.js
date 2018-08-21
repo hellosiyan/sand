@@ -41,6 +41,10 @@ export default class ControlBoard extends Collidable(Container) {
             this.lettersEntered = '';
             state.events.emit('fusebox.deactivateAll');
         });
+
+        state.events.on('timer.timeout', () => {
+            this.lamp.setStyle({color: '#f00'});
+        });
     }
 
     checkCorrect() {

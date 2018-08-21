@@ -5,6 +5,7 @@ import AutoScrollView from './lib/AutoScrollView';
 import Rectangle from './lib/Rectangle';
 import Player from './Player';
 import Desert from './Desert';
+import Timer from './Timer';
 import { inGridTiles } from './utils';
 import state from './State';
 
@@ -17,21 +18,25 @@ export default class Level extends Listenable(Settable()) {
 
         this.desert = new Desert();
         this.player = new Player();
+        state.timer = this.timer = new Timer();
 
-        this.drawable = new Container();
-
+        this.rootDrawable = new Container();
         this.view = new AutoScrollView();
+        this.floatDrawable = new Container();
+        this.fixedDrawable = new Container();
     }
 
     start() {
         this.prepareScene();
 
-        state.canvas.setScene(this.view);
+        state.canvas.setScene(this.rootDrawable);
         state.loop.start(dt => this.loopHandler(dt));
 
         this.startedAt = (new Date()).getTime();
 
         this.bindEvents();
+
+        this.timer.setTimeLimit(5).start();
 
         return this;
     }
@@ -55,9 +60,15 @@ export default class Level extends Listenable(Settable()) {
 
             state.messagePort.setLetters(levels[this.level - 1]);
         });
+
+        state.events.on('timer.timeout', () => {
+            this.stop();
+        });
     }
 
     loopHandler(dt) {
+        this.timer.tick(dt);
+
         this.player.move(dt);
 
         this.detectCollisions();
@@ -67,24 +78,34 @@ export default class Level extends Listenable(Settable()) {
     }
 
     prepareScene() {
-        this.desert.placeActors(this.player);
-
-        this.drawable.set({
-            x: Math.round(state.canvas.width / 2 - this.drawable.width / 2),
-            y: Math.round(state.canvas.height / 2 - this.drawable.height / 2),
-            width: state.canvas.width,
-            height: state.canvas.height,
-        });
-
-        this.drawable.addChild(this.desert.drawable);
-
-        this.drawable.addTo(this.view);
-
         this.view.set({
-            width: state.canvas.width,
-            height: state.canvas.height,
-            target: this.player,
-        });
+                width: state.canvas.width,
+                height: state.canvas.height,
+                target: this.player,
+            })
+            .addTo(this.rootDrawable);
+
+        this.floatDrawable.set({
+                x: Math.round(state.canvas.width / 2 - this.floatDrawable.width / 2),
+                y: Math.round(state.canvas.height / 2 - this.floatDrawable.height / 2),
+                width: state.canvas.width,
+                height: state.canvas.height,
+            })
+            .addChild(this.desert.drawable)
+            .addTo(this.view);
+
+        this.fixedDrawable.set({
+                x: 0,
+                y: 0,
+                width: state.canvas.width,
+                height: state.canvas.height,
+            })
+            .addTo(this.rootDrawable);
+
+        this.timer.set({
+            x: Math.round(state.canvas.width / 2 - this.timer.width / 2),
+            y: state.canvas.height - this.timer.height - inGridTiles(1),
+        }).addTo(this.fixedDrawable);
 
         Object.assign(this.view.boundries, {
             left: Math.round(this.view.width * 0.2),
@@ -92,6 +113,8 @@ export default class Level extends Listenable(Settable()) {
             top: Math.round(this.view.height * 0.5),
             bottom: Math.round(this.view.height * 0.8),
         });
+
+        this.desert.placeActors(this.player);
     }
 
     detectCollisions() {

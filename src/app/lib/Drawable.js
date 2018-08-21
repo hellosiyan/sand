@@ -44,6 +44,7 @@ export default class Drawable extends Settable() {
 
     addTo (container) {
         container.addChild(this);
+        return this;
     }
 
     setStyle(styles) {
