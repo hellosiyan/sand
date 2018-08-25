@@ -1,7 +1,8 @@
 import SortedContainer from './lib/SortedContainer';
-import { inGridTiles } from './utils';
+import { inGridTiles, inPixels } from './utils';
 
 import SandTexture from './elements/SandTexture';
+import FuseboxPlate from './FuseboxPlate';
 import Obstacle from './Obstacle';
 import Fusebox from './Fusebox';
 import ControlBoard from './ControlBoard';
@@ -98,7 +99,18 @@ export default class Desert {
             }),
         ];
 
+        this.fuseboxPlates = [];
+        this.fuseboxes.forEach(fusebox => {
+            this.fuseboxPlates.push(
+                (new FuseboxPlate()).set({
+                    x: fusebox.x,
+                    y: fusebox.y + fusebox.height + inPixels(1),
+                }).addTo(this.drawable)
+            );
+        });
+
         state.fuseboxes = this.fuseboxes;
+        state.fuseboxPlates = this.fuseboxPlates;
 
         return this.fuseboxes;
     }
@@ -108,10 +120,11 @@ export default class Desert {
             x: this.ground.x + inGridTiles(8),
             y: this.ground.y + inGridTiles(9),
         });
+
         state.controlBoardPlate = (new ControlBoardPlate()).set({
-            x: state.controlBoard.x,
+            x: state.controlBoard.x + inPixels(13),
             y: state.controlBoard.y + state.controlBoard.height,
-            width: state.controlBoard.width
+            width: state.controlBoard.width - inPixels(17)
         });
 
         return [

@@ -133,9 +133,9 @@ export default class Level extends Listenable(Settable()) {
     }
 
     detectActivatedPressurePlates() {
-        state.fuseboxes.forEach(fusebox => {
+        state.fuseboxPlates.forEach((fusebox, index) => {
             if (this.player.intersects(fusebox)) {
-                fusebox.activate();
+                state.fuseboxes[index].activate();
             }
         });
 

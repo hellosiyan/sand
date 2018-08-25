@@ -1,32 +1,22 @@
 import Container from './lib/Container';
+import Collidable from './lib/Collidable';
 import state from './State';
 import { inGridTiles, inPixels } from './utils';
 import FuseboxElement from './elements/Fusebox';
 import { config } from './config';
 
-export default class Fusebox extends Container {
+export default class Fusebox extends Collidable(Container) {
     constructor() {
         super();
 
-        this.width = inGridTiles(1);
-        this.height = inGridTiles(1);
+        this.element = (new FuseboxElement()).addTo(this);
+
+        this.width = this.element.width;
+        this.height = inPixels(5);
+
+        this.element.alignWith(this).bottomEdges();
 
         this.isActive = false;
-
-        this.element = new FuseboxElement();
-        this.addChild(this.element);
-    }
-
-    draw(ctx) {
-        if (this.isActive) {
-            ctx.fillStyle = config.palettes.fusebox['3'];
-        } else {
-            ctx.fillStyle = config.palettes.fusebox['2'];
-        }
-
-        ctx.fillRect(this.x, this.y + inPixels(4), this.width, this.height - inPixels(8));
-
-        super.draw(ctx);
     }
 
     setLetter(letter) {
