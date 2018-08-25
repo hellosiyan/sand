@@ -36,7 +36,7 @@ export default class Level extends Listenable(Settable()) {
 
         this.bindEvents();
 
-        this.timer.setTimeLimit(5).start();
+        this.timer.setTimeLimit(120).start();
 
         return this;
     }

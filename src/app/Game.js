@@ -5,7 +5,9 @@ import Loop from './lib/Loop';
 import Canvas from './lib/Canvas';
 import Container from './lib/Container';
 import TextOverlay from './lib/TextOverlay';
+import Pixmap from './Pixmap';
 
+import PngReader from './PngReader';
 import Level from './Level';
 import state from './State';
 

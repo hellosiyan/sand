@@ -2,6 +2,8 @@ import Container from './lib/Container';
 import Collidable from './lib/Collidable';
 import Rectangle from './lib/Rectangle';
 import ControlBoardPlate from './ControlBoardPlate';
+import ControlBoardElement from './elements/ControlBoard';
+import LampElement from './elements/Lamp';
 import state from './State';
 import { inGridTiles, inPixels } from './utils';
 import { config } from './config';
@@ -10,21 +12,22 @@ export default class ControlBoard extends Collidable(Container) {
     constructor() {
         super();
 
-        this.width = inGridTiles(2);
-        this.height = inGridTiles(2);
+        this.element = (new ControlBoardElement()).addTo(this);
 
-        this.lamp = new Rectangle()
-            .set({
-                x: inPixels(4),
-                y: inPixels(4),
-                width: inPixels(52),
-                height: inPixels(22),
-            })
-            .setStyle({
-                color: '#666'
-            });
+        this.width = this.element.width;
+        this.height = inGridTiles(1);
 
-        this.addChild(this.lamp);
+        this.element.alignWith(this).bottomEdges();
+
+        this.lamps = [];
+        for (let i = 0; i < 5; i++) {
+            this.lamps.push(
+                (new LampElement()).set({
+                    x: inPixels(18 + i * 6 + (i==4?1:0)),
+                    y: inPixels(78),
+                }).addTo(this.element)
+            );
+        }
 
         this.lettersEntered = '';
 
@@ -37,13 +40,13 @@ export default class ControlBoard extends Collidable(Container) {
         });
 
         state.events.on('controlBoardPlate.stepOff', () => {
-            this.lamp.setStyle({color: '#666'});
+            this.lamps[state.level.level - 1].turn('inactive');
             this.lettersEntered = '';
             state.events.emit('fusebox.deactivateAll');
         });
 
         state.events.on('timer.timeout', () => {
-            this.lamp.setStyle({color: '#f00'});
+            this.lamps[state.level.level - 1].turn('red');
         });
     }
 
@@ -51,20 +54,11 @@ export default class ControlBoard extends Collidable(Container) {
         let correct = this.lettersEntered == state.messagePort.getLetters();
 
         if (correct) {
+            this.lamps[state.level.level - 1].turn('green');
             state.events.emit('controlboard.correct');
-            this.lamp.setStyle({color: '#0f0'});
         } else {
+            this.lamps[state.level.level - 1].turn('red');
             state.events.emit('controlboard.incorrect');
-            this.lamp.setStyle({color: '#f00'});
         }
-    }
-
-    draw(ctx) {
-        ctx.fillStyle = config.palettes.controlBoard['1'];
-        ctx.fillRect(this.x, this.y, this.width, this.height);
-        ctx.fillStyle = config.palettes.controlBoard['2'];
-        ctx.fillRect(this.x, this.y + inGridTiles(1), this.width, inPixels(1));
-
-        super.draw(ctx);
     }
 }
