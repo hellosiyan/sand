@@ -31,6 +31,7 @@ export default class Fusebox extends Collidable(Container) {
         }
 
         this.isActive = true;
+        this.element.rune.format = 'glowing';
 
         state.events.emit('fusebox.activated', this.element.rune.letter);
 
@@ -43,6 +44,7 @@ export default class Fusebox extends Collidable(Container) {
         }
 
         this.isActive = false;
+        this.element.rune.format = 'outlined';
 
         return this;
     }

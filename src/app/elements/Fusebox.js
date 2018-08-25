@@ -44,6 +44,7 @@ export default class Fusebox extends Container {
         this.rune = new Rune();
         this.rune.y = inPixels(5);
         this.rune.letter = 'a';
+        this.rune.format = 'outlined';
         this.rune.alignWith(this).center();
 
         this.addChild(this.rune);
