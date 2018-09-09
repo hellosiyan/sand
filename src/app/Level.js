@@ -5,6 +5,7 @@ import AutoScrollView from './lib/AutoScrollView';
 import Rectangle from './lib/Rectangle';
 import Player from './Player';
 import Desert from './Desert';
+import Storm from './Storm';
 import Timer from './Timer';
 import { inGridTiles } from './utils';
 import state from './State';
@@ -36,7 +37,7 @@ export default class Level extends Listenable(Settable()) {
 
         this.bindEvents();
 
-        this.timer.setTimeLimit(120).start();
+        this.timer.setTimeLimit(60).start();
 
         return this;
     }
@@ -99,6 +100,10 @@ export default class Level extends Listenable(Settable()) {
                 height: state.canvas.height,
             })
             .addTo(this.rootDrawable);
+
+        let storm = new Storm(state.canvas.width, state.canvas.height);
+        storm.init();
+        storm.addTo(this.fixedDrawable);
 
         this.timer.set({
             x: Math.round(state.canvas.width / 2 - this.timer.width / 2),

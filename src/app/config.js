@@ -46,7 +46,8 @@ export const config = {
             'd': '#b6b2b3' // grey
         },
         sand: {
-            '0': '#f8d95a',
+            // '0': '#f8d95a',
+            '0': 'rgb(248,217,90,0.7)',
             '1': '#876701',
         },
         fusebox: {
