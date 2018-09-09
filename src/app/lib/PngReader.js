@@ -10,20 +10,162 @@ export default class PngReader {
         });
     }
 
-    readAsDrawable(url) {
+    readAsDrawable(url, trim = false) {
         return new Promise(resolve => {
             this.read(url)
+                .then(pixdef => {
+                    if (trim) {
+                        this.trimPixdef(pixdef);
+                    }
+
+                    return pixdef;
+                })
                 .then(pixdef => this.createPixmap(pixdef))
                 .then(drawable => resolve(drawable));
         });
     }
 
-    readAsLiteral(url) {
+    readAsLiteral(url, trim = false) {
         return new Promise(resolve => {
             this.read(url)
+                .then(pixdef => {
+                    if (trim) {
+                        this.trimPixdef(pixdef);
+                    }
+
+                    return pixdef;
+                })
                 .then(pixdef => this.createLiteral(pixdef))
-                .then(drawable => resolve(drawable));
+                .then(literal => resolve(literal));
         });
+    }
+
+    trimPixdef(pixdef) {
+        let transparentCode = false;
+
+        for (let code in pixdef.palette) {
+            if (pixdef.palette[code] == 'rgba(0,0,0,0)') {
+                transparentCode = code;
+                break;
+            }
+        }
+
+        let data = [[]];
+        let row = 0;
+        for (let char of pixdef.literal) {
+            if(char == '\n') continue;
+
+            if (data[row].length >= pixdef.width) {
+                row ++;
+                data[row] = [];
+            }
+
+            data[row].push(char);
+        }
+
+        if (data.length != pixdef.height || data[0].length != pixdef.width) {
+            console.warning('TrimPixbuf Error: literal read incorrectly');
+        }
+
+        let emptyArea = {
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+        }
+        // Trim top
+        for (var ic = 0; ic < data.length; ic++) {
+            let isEmpty = true;
+
+            for (var ir = 0; ir < data[ic].length; ir++) {
+                if (data[ic][ir] !== transparentCode) {
+                    isEmpty = false;
+                    break;
+                }
+            }
+
+            if (isEmpty) {
+                emptyArea.top ++;
+            } else {
+                break;
+            }
+        }
+
+        // Trim bottom
+        for (var ic = data.length - 1; ic >= 0; ic--) {
+            let isEmpty = true;
+
+            for (var ir = 0; ir < data[ic].length; ir++) {
+                if (data[ic][ir] !== transparentCode) {
+                    isEmpty = false;
+                    break;
+                }
+            }
+
+            if (isEmpty) {
+                emptyArea.bottom ++;
+            } else {
+                break;
+            }
+        }
+
+        // Trim left
+        for (var ir = 0; ir < pixdef.width; ir++) {
+            let isEmpty = true;
+
+            for (var ic = 0; ic < pixdef.height; ic++) {
+                if (data[ic][ir] !== transparentCode) {
+                    isEmpty = false;
+                    break;
+                }
+            }
+
+            if (isEmpty) {
+                emptyArea.left ++;
+            } else {
+                break;
+            }
+        }
+
+        // Trim right
+        for (var ir = pixdef.width - 1; ir >= 0; ir--) {
+            let isEmpty = true;
+
+            for (var ic = pixdef.height - 1; ic >= 0; ic--) {
+                if (data[ic][ir] !== transparentCode) {
+                    isEmpty = false;
+                    break;
+                }
+            }
+
+            if (isEmpty) {
+                emptyArea.right ++;
+            } else {
+                break;
+            }
+        }
+
+        // New literal
+
+        let newLiteral = '';
+
+        for (var ic = 0; ic < data.length; ic++) {
+            if (ic < emptyArea.top || ic >= pixdef.height - emptyArea.bottom) {
+                continue;
+            }
+
+            for (var ir = 0; ir < data[ic].length; ir++) {
+                if (ir < emptyArea.left || ir >= pixdef.width - emptyArea.right) {
+                    continue;
+                }
+
+                newLiteral += data[ic][ir];
+            }
+
+            newLiteral += '\n';
+        }
+
+        pixdef.literal = newLiteral;
     }
 
     createPixmap(pixmapDefinition) {
@@ -75,6 +217,8 @@ export default class PngReader {
         const pixmapDefinition = {
             literal: '',
             palette: {},
+            width: canvas.width,
+            height: canvas.height
         };
 
         const pixels = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data;

@@ -29,6 +29,22 @@ export const config = {
         'C': '#17314a',
     },
     palettes: {
+        flat: {
+            '0': 'rgba(0,0,0,0)',
+            '1': '#fbd649', // yellow
+            '2': '#a56b01', // dark yellow
+            '3': '#00b1e3', // blue
+            '4': '#005d7b', // dark blue
+            '5': '#fe5c27', // red
+            '6': '#bc2a01', // dark red
+            '7': '#f07287', // pink
+            '8': '#ea6176', // dark pink
+            '9': '#0c923d', // green
+            'a': '#006a1b', // dark green
+            'b': '#004601', // darker green
+            'c': '#ffffff', // white
+            'd': '#b6b2b3' // grey
+        },
         sand: {
             '0': '#f8d95a',
             '1': '#876701',

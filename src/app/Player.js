@@ -1,6 +1,6 @@
 import Container from './lib/Container';
 import Movable from './lib/Movable';
-import ChildGhost from './elements/ChildGhost';
+import PlayerElement from './elements/Player';
 import io from './lib/IO';
 import { config } from './config';
 import { inPixels } from './utils';
@@ -9,7 +9,7 @@ export default class Player extends Movable(Container) {
     constructor() {
         super();
 
-        this.ghost = new ChildGhost();
+        this.ghost = new PlayerElement();
         this.addChild(this.ghost);
 
         this.width = this.ghost.width;

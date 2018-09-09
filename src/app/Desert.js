@@ -2,6 +2,7 @@ import SortedContainer from './lib/SortedContainer';
 import { inGridTiles, inPixels } from './utils';
 
 import SandTexture from './elements/SandTexture';
+import Plant from './elements/Plant';
 import FuseboxPlate from './FuseboxPlate';
 import Obstacle from './Obstacle';
 import Fusebox from './Fusebox';
@@ -37,6 +38,7 @@ export default class Desert {
         this.drawable.addChild(this.createFuseboxes());
         this.drawable.addChild(this.createControlBoard());
         this.drawable.addChild(this.createMessagePort());
+        this.drawable.addChild(this.createPlants());
     }
 
     createGround() {
@@ -154,5 +156,20 @@ export default class Desert {
             state.messagePort,
             state.messagePortPlate
         ];
+    }
+
+    createPlants() {
+        this.plants = [];
+
+        for (var i = 1; i <= 8; i++) {
+            this.plants.push((new Plant()).setKind(i).set({
+                x: this.ground.x + inGridTiles(3 + i ),
+                y: this.ground.y + inGridTiles(14),
+            }));
+        }
+
+        state.plants = this.plants;
+
+        return this.plants;
     }
 }
