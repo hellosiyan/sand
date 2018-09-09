@@ -12,8 +12,5 @@
     "rollup": "^0.63.4",
     "rollup-plugin-commonjs": "^9.1.4",
     "rollup-plugin-node-resolve": "^3.3.0"
-  },
-  "dependencies": {
-    "stats.js": "^0.17.0"
   }
 }

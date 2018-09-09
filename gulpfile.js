@@ -62,8 +62,8 @@ function do_closure_compile(source, destination) {
     return new Promise(function(resolve, reject) {
         gulp.src(source, {base: destination})
             .pipe(compiler({
-                // compilationLevel: 'ADVANCED',
-                compilationLevel: 'SIMPLE',
+                compilationLevel: 'ADVANCED',
+                // compilationLevel: 'SIMPLE',
                 // compilationLevel: 'WHITESPACE_ONLY',
                 warningLevel: 'QUIET',
                 // outputWrapper: '(function(){\n%output%\n}).call(this)',

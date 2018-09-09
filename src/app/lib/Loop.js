@@ -1,6 +1,6 @@
-import statsJs from 'stats.js';
+import Stats from './Stats';
 
-const stats = statsJs(0);
+const stats = Stats(0);
 
 export default class Loop {
 

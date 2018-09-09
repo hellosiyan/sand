@@ -4,7 +4,7 @@ import state from '../State';
 import { config } from '../config';
 
 const pixmaps = {
-    front: Pixmap.load(`
+    'front': Pixmap.load(`
 000000000000100000001100000000
 000000000000111111111100000000
 000000000000111222221100000000
@@ -68,14 +68,14 @@ export default class Player extends Drawable {
     constructor() {
         super();
 
-        this.width = pixmaps.front.width;
-        this.height = pixmaps.front.height;
+        this.width = pixmaps['front'].width;
+        this.height = pixmaps['front'].height;
 
         this.levitationTimeInterval = 0;
 
         this.direction = {
-            x: 'left', // (left|right)
-            y: 'down', // (up|down)
+            'x': 'left', // (left|right)
+            'y': 'down', // (up|down)
         };
     }
 
