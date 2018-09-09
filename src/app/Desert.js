@@ -8,8 +8,6 @@ import Obstacle from './Obstacle';
 import Fusebox from './Fusebox';
 import ControlBoard from './ControlBoard';
 import ControlBoardPlate from './ControlBoardPlate';
-import MessagePort from './MessagePort';
-import MessagePortPlate from './MessagePortPlate';
 import state from './State';
 
 export default class Desert {
@@ -37,7 +35,6 @@ export default class Desert {
         this.drawable.addChild(this.createWalls());
         this.drawable.addChild(this.createFuseboxes());
         this.drawable.addChild(this.createControlBoard());
-        this.drawable.addChild(this.createMessagePort());
         this.drawable.addChild(this.createPlants());
     }
 
@@ -135,29 +132,6 @@ export default class Desert {
         ];
     }
 
-    createMessagePort() {
-        if (state.messagePort) {
-            return state.messagePort;
-        }
-
-        state.messagePort = (new MessagePort()).set({
-            x: this.ground.x + inGridTiles(11),
-            y: this.ground.y + inGridTiles(10),
-        }).setLetters('a');
-
-        state.messagePortPlate = (new MessagePortPlate()).set({
-            x: state.messagePort.x,
-            y: state.messagePort.y + state.messagePort.height,
-            width: state.messagePort.width,
-            height: inGridTiles(0.5),
-        });
-
-        return [
-            state.messagePort,
-            state.messagePortPlate
-        ];
-    }
-
     createPlants() {
         this.plants = [];
 
@@ -165,6 +139,12 @@ export default class Desert {
             this.plants.push((new Plant()).setKind(i).set({
                 x: this.ground.x + inGridTiles(3 + i ),
                 y: this.ground.y + inGridTiles(14),
+            }));
+        }
+        for (var i = 1; i <= 8; i++) {
+            this.plants.push((new Plant()).setKind(i).set({
+                x: this.ground.x + inGridTiles(5 + i ),
+                y: this.ground.y + inGridTiles(11),
             }));
         }
 

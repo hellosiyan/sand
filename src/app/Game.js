@@ -33,17 +33,17 @@ class Game {
         // const reader = new PngReader();
         // const pngUrls = [
         //     'raw-plate.png',
-        //     // 'raw-lady.png',
-        //     // 'raw-plant1.png',
-        //     // 'raw-plant2.png',
-        //     // 'raw-plant3.png',
-        //     // 'raw-plant4.png',
-        //     // 'raw-plant5.png',
-        //     // 'raw-plant6.png',
-        //     // 'raw-plant7.png',
-        //     // 'raw-plant8.png',
-        //     // 'raw-stone.png',
-        //     // 'raw-antenna.png',
+        //     'raw-lady.png',
+        //     'raw-plant1.png',
+        //     'raw-plant2.png',
+        //     'raw-plant3.png',
+        //     'raw-plant4.png',
+        //     'raw-plant5.png',
+        //     'raw-plant6.png',
+        //     'raw-plant7.png',
+        //     'raw-plant8.png',
+        //     'raw-stone.png',
+        //     'raw-antenna.png',
         // ];
         // pngUrls.forEach(url => {
         //     reader.readAsLiteral(`../${url}`, true)

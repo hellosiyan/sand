@@ -51,7 +51,7 @@ export default class ControlBoard extends Collidable(Container) {
     }
 
     checkCorrect() {
-        let correct = this.lettersEntered == state.messagePort.getLetters();
+        let correct = true;
 
         if (correct) {
             this.lamps[state.level.level - 1].turn('green');

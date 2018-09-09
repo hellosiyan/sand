@@ -57,8 +57,6 @@ export default class Level extends Listenable(Settable()) {
             const levels = ['a', 'ba', 'cab'];
 
             this.level ++;
-
-            state.messagePort.setLetters(levels[this.level - 1]);
         });
 
         state.events.on('timer.timeout', () => {
@@ -143,12 +141,6 @@ export default class Level extends Listenable(Settable()) {
             state.controlBoardPlate.stepOn();
         } else {
             state.controlBoardPlate.stepOff();
-        }
-
-        if (this.player.intersects(state.messagePortPlate)) {
-            state.messagePortPlate.stepOn();
-        } else {
-            state.messagePortPlate.stepOff();
         }
     }
 }
