@@ -17,7 +17,7 @@ export default class Timer extends Container {
     }
 
     draw(ctx) {
-        const timeCoeff = this.timePassed/this.timeLimit;
+        const timeCoeff = this.passedTimeCoeff();
 
         ctx.fillStyle = config.palettes.timer['0'];
         ctx.fillRect(this.x, this.y, this.width, this.height);
@@ -63,6 +63,10 @@ export default class Timer extends Container {
             this.pause();
             state.events.emit('timer.timeout');
         }
+    }
+
+    passedTimeCoeff() {
+        return this.timePassed/this.timeLimit;
     }
 
     setTimeLimit(seconds) {

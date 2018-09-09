@@ -12,4 +12,18 @@ export function inGridTiles(value) {
     return value * config.size.gridPixels;
 }
 
+export function lerp(v0, v1, t) {
+    return v0 + t * (v1 - v0);
+}
+
+export function randomBetween(min, max, round) {
+    let num = Math.random() * (max - min + 1) + min;
+
+    if (round) {
+        num = Math.floor(num);
+    }
+
+    return num;
+}
+
 export default { inPixels };

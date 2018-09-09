@@ -1,71 +1,78 @@
 import Drawable from './lib/Drawable';
 import state from './State';
-import { inPixels } from './utils';
+import { inPixels, lerp, randomBetween } from './utils';
 
 class Particle {
     constructor(x, y) {
         this.x = x;
         this.y = y;
 
-        this.r = randomBetween(10, 30);
-        this.a = randomBetween(0, Math.PI);
-        this.aStep = 1.8;
-
         this.size = inPixels(1);
         this.speed = randomBetween(120, 240);
     }
 
-    update() {
-        this.x += state.loop.dt * Math.cos(this.a) * this.r;
-        this.a += state.loop.dt * this.aStep;
-
-        this.y += state.loop.dt * this.speed;
+    update(dt) {
+        this.y += dt * this.speed;
     }
-}
-
-function randomBetween(min, max, round) {
-    let num = Math.random() * (max - min + 1) + min;
-
-    if (round) {
-        num = Math.floor(num);
-    }
-
-    return num;
 }
 
 export default class Storm extends Drawable {
-    constructor(width, height) {
+    constructor() {
         super();
 
-        this.width = width;
-        this.height = height;
-        this.maxParticles = 100;
+        this.width = 0;
+        this.height = 0;
+
+        this.level = 0;
+
+        this.minParticles = 1;
+        this.maxParticles = 2000;
+        this.numParticles = this.minParticles;
+
         this.particles = [];
+
         this.sideSpeed = 360;
     }
 
     init() {
-        let i = this.maxParticles;
+        let i = this.numParticles;
 
         while (i--) {
-            let x = randomBetween(0, this.width, true);
-            let y = randomBetween(0, this.height, true);
-
-            this.particles.push(new Particle(x, y));
+            this.addParticle();
         }
+
+        return this;
+    }
+
+    setLevel(level) {
+        this.level = level;
+
+        this.numParticles = lerp(this.minParticles, this.maxParticles, this.level);
     }
 
     draw(ctx) {
-        let i = this.particles.length;
+        while (this.particles.length < this.numParticles) {
+            this.addParticle();
+        }
 
-        ctx.fillStyle = '#fbc02d';
-        ctx.globalAlpha = 0.1;
+        ctx.fillStyle = '#fad170';
+        ctx.globalAlpha = this.level;
+
+        ctx.globalCompositeOperation = 'color';
         ctx.fillRect(0, 0, this.width, this.height);
+
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.fillRect(0, 0, this.width, this.height);
+
         ctx.fillStyle = '#876701';
         ctx.globalAlpha = 1;
+        ctx.globalCompositeOperation = 'source-over';
+
+
+        let i = this.particles.length;
 
         while (i--) {
-            let particle = this.particles[i];
+            const particle = this.particles[i];
 
             if (particle.y >= this.height) {
                 particle.y = -particle.size + (particle.y % this.height);
@@ -82,10 +89,17 @@ export default class Storm extends Drawable {
 
             ctx.fillRect(particle.x, particle.y, particle.size, particle.size);
 
-            particle.update();
+            particle.update(state.loop.dt);
 
             particle.x += state.level.view.lastMove.x + state.loop.dt * this.sideSpeed;
             particle.y += state.level.view.lastMove.y;
         }
+    }
+
+    addParticle() {
+        const x = randomBetween(0, this.width, true);
+        const y = randomBetween(0, this.height, true);
+
+        this.particles.push(new Particle(x, y));
     }
 }

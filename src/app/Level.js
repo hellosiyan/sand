@@ -21,6 +21,8 @@ export default class Level extends Listenable(Settable()) {
         this.player = new Player();
         state.timer = this.timer = new Timer();
 
+        state.storm = this.storm = new Storm();
+
         this.rootDrawable = new Container();
         this.view = new AutoScrollView();
         this.floatDrawable = new Container();
@@ -37,7 +39,7 @@ export default class Level extends Listenable(Settable()) {
 
         this.bindEvents();
 
-        this.timer.setTimeLimit(60).start();
+        this.timer.setTimeLimit(30).start();
 
         return this;
     }
@@ -67,6 +69,7 @@ export default class Level extends Listenable(Settable()) {
 
     loopHandler(dt) {
         this.timer.tick(dt);
+        this.storm.setLevel(this.timer.passedTimeCoeff())
 
         this.player.move(dt);
 
@@ -101,9 +104,13 @@ export default class Level extends Listenable(Settable()) {
             })
             .addTo(this.rootDrawable);
 
-        let storm = new Storm(state.canvas.width, state.canvas.height);
-        storm.init();
-        storm.addTo(this.fixedDrawable);
+
+        this.storm.set({
+                width: state.canvas.width,
+                height: state.canvas.height,
+            })
+            .init()
+            .addTo(this.fixedDrawable);
 
         this.timer.set({
             x: Math.round(state.canvas.width / 2 - this.timer.width / 2),
