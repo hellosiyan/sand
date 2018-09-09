@@ -108,11 +108,6 @@ export default class Pixmap extends Settable() {
                 continue;
             }
 
-            if (! colorKey.hasOwnProperty(char)) {
-                console.warn(`Key "${char}" not defined in the color list.`);
-                colorKey[char] = '#0f0';
-            }
-
             colors.push(colorKey[char]);
         }
 

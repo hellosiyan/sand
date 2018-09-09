@@ -66,7 +66,7 @@ var Stats = function () {
 
             var time = ( performance || Date ).now();
 
-            msPanel.update( time - beginTime, 200 );
+            msPanel.update( time - beginTime, 20 );
 
             if ( time > prevTime + 1000 ) {
 

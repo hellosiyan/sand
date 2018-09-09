@@ -1,6 +1,6 @@
-import Stats from './Stats';
+// import Stats from './Stats';
 
-const stats = Stats(0);
+// const stats = Stats(0);
 
 export default class Loop {
 
@@ -11,13 +11,14 @@ export default class Loop {
         this.lastTime = this.timestamp();
         this.worker = () => {};
 
-        document.body.appendChild(stats.dom);
+        // document.body.appendChild(stats.dom);
     }
 
     start (worker) {
         this.play = true;
         this.worker = worker;
 
+        this.lastTime = this.timestamp();
         return this.raf();
     }
 
@@ -40,7 +41,11 @@ export default class Loop {
 
     raf () {
         return window.requestAnimationFrame(() => {
-            this.showStats && stats.begin();
+            if (! this.play) {
+                return;
+            }
+
+            // this.showStats && stats.begin();
 
             let now = this.timestamp();
             let dt = now - this.lastTime;
@@ -56,7 +61,7 @@ export default class Loop {
 
             this.tick(dt);
 
-            this.showStats && stats.end();
+            // this.showStats && stats.end();
         });
     }
 }

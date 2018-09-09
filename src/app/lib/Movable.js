@@ -40,17 +40,19 @@ export default function Movable(baseClass) {
                 y: 0,
             };
 
+            const targetCollisionBox = target.getCollisionBox();
+
             // React only in the direction we are going
             if (this.direction.x === 'left') {
-                impulse.x = target.x + target.width - this.x;
+                impulse.x = targetCollisionBox.right - this.x;
             } else if (this.direction.x === 'right') {
-                impulse.x = -1 * (this.x + this.width - target.x);
+                impulse.x = -1 * (this.x + this.width - targetCollisionBox.left);
             }
 
             if (this.direction.y === 'up') {
-                impulse.y = target.y + target.height - this.y;
+                impulse.y = targetCollisionBox.bottom - this.y;
             } else if (this.direction.y === 'down') {
-                impulse.y = -1 * (this.y + this.height - target.y);
+                impulse.y = -1 * (this.y + this.height - targetCollisionBox.top);
             }
 
             // React only on one axis

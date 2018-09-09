@@ -1,104 +1,133 @@
 import SortedContainer from './lib/SortedContainer';
-import { inGridTiles, inPixels } from './utils';
+import Container from './lib/Container';
+import { inGridTiles, inPixels, fromGridTiles } from './utils';
 
 import SandTexture from './elements/SandTexture';
 import Plant from './elements/Plant';
 import FuseboxPlate from './FuseboxPlate';
 import Obstacle from './Obstacle';
 import Fusebox from './Fusebox';
-import ControlBoard from './ControlBoard';
-import ControlBoardPlate from './ControlBoardPlate';
+import Hut from './Hut';
 import state from './State';
+
+let cachedGround = false;
 
 export default class Desert {
     constructor() {
-        this.width = 20;
-        this.height = 20;
+        this.width = inGridTiles(30);
+        this.height = inGridTiles(30);
 
         this.drawable = new SortedContainer().set({
             width: inGridTiles(this.width),
             height: inGridTiles(this.height),
         });
 
-        this.createDrawables();
+        if (! cachedGround) {
+            cachedGround = this.createGround();
+        }
+
+        this.ground = cachedGround.addTo(this.drawable);
+
+        this.drawable.addChild(this.createWalls());
+        this.drawable.addChild(this.createHut());
     }
 
     placeActors(player) {
-        player.x = this.ground.x + inGridTiles(10);
-        player.y = this.ground.y + inGridTiles(13);
+        const hutBox = this.hut.getCollisionBox();
+
+        player.x = hutBox.right + inGridTiles(1);
+        player.y = hutBox.bottom + inGridTiles(1);
 
         this.drawable.addChild(player);
     }
 
-    createDrawables() {
-        this.drawable.addChild(this.createGround());
-        this.drawable.addChild(this.createWalls());
-        this.drawable.addChild(this.createFuseboxes());
-        this.drawable.addChild(this.createControlBoard());
-        this.drawable.addChild(this.createPlants());
-    }
-
     createGround() {
-        this.ground = new SandTexture();
+        const topPadding = inGridTiles(7);
+        const bottomPadding = inGridTiles(2);
+        const sidePadding = inGridTiles(2);
 
-        this.ground.set({
-            x: inGridTiles(1),
-            y: inGridTiles(1),
-            width: inGridTiles(this.width - 2),
-            height: inGridTiles(this.height - 2),
-        });
+        let ground = (new Container())
+            .set({
+                x: -1 * sidePadding,
+                y: -1 * topPadding,
+                width: this.width + 2 * sidePadding,
+                height: this.height + topPadding + bottomPadding,
+            });
 
-        this.ground.cache();
+        (new SandTexture())
+            .set({
+                x: 0,
+                y: 0,
+                width: ground.width,
+                height: ground.height,
+            })
+            .addTo(ground);
 
-        return this.ground;
+        const areaInGridTiles = fromGridTiles(this.width) * fromGridTiles(this.height);
+        let numPlants = Math.floor(areaInGridTiles / 2);
+
+        while(numPlants--) {
+            const kind = 1 + (numPlants % 6);
+            (new Plant())
+                .setKind(kind)
+                .set({
+                    x: state.pcg.randomBetween(0, ground.width, true),
+                    y: state.pcg.randomBetween(0, ground.height, true),
+                })
+                .addTo(ground);
+        }
+
+        ground.cache();
+
+        return ground;
     }
 
     createWalls() {
+        const thickness = inPixels(1);
+
         return [
-            (new Obstacle()).set({
-                x: this.ground.x + inGridTiles(2),
-                y: this.ground.y + inGridTiles(7),
-                width: this.ground.width - inGridTiles(4),
-                height: inGridTiles(1),
-            }),
-            (new Obstacle()).set({
-                x: this.ground.x + inGridTiles(2),
-                y: this.ground.y + this.ground.height - inGridTiles(2),
-                width: this.ground.width - inGridTiles(4),
-                height: inGridTiles(1),
-            }),
-            (new Obstacle()).set({
-                x: this.ground.x + inGridTiles(2),
-                y: this.ground.y + inGridTiles(7),
-                width: inGridTiles(1),
-                height: this.ground.height - inGridTiles(8),
-            }),
-            (new Obstacle()).set({
-                x: this.ground.x + this.ground.width - inGridTiles(3),
-                y: this.ground.y + inGridTiles(7),
-                width: inGridTiles(1),
-                height: this.ground.height - inGridTiles(8),
-            }),
-        ];
+            [0, 0, this.width, thickness],
+            [0, this.height - thickness, this.width, thickness],
+            [0, 0, thickness, this.height],
+            [this.width - thickness, 0, thickness, this.height]
+        ].map(opt => (new Obstacle()).set({
+            isWall: true,
+            x: opt[0],
+            y: opt[1],
+            width: opt[2],
+            height: opt[3],
+        }));
     }
 
-    createFuseboxes() {
-        this.fuseboxes = [
-            (new Fusebox()).setLetter('a').set({
-                x: this.ground.x + inGridTiles(4),
-                y: this.ground.y + inGridTiles(10),
-            }),
-            (new Fusebox()).setLetter('b').set({
-                x: this.ground.x + inGridTiles(6),
-                y: this.ground.y + inGridTiles(10),
-            }),
-            (new Fusebox()).setLetter('c').set({
-                x: this.ground.x + inGridTiles(4),
-                y: this.ground.y + inGridTiles(12),
-            }),
-        ];
+    createHut() {
+        this.hut = new Hut();
 
+        this.hut.set({
+            x: (this.width - this.hut.width) / 2,
+            y: this.height / 2 - this.hut.height
+        });
+
+        state.hut = this.hut;
+
+        return this.hut;
+    }
+
+    placeStones(stones) {
+        this.fuseboxes = [];
         this.fuseboxPlates = [];
+        for(let letter in stones) {
+            const position = stones[letter];
+            this.fuseboxes.push(
+                (new Fusebox())
+                    .setLetter(letter)
+                    .set({
+                        x: inGridTiles(position.x),
+                        y: inGridTiles(position.y),
+                    })
+                    .addTo(this.drawable)
+            );
+        }
+
         this.fuseboxes.forEach(fusebox => {
             this.fuseboxPlates.push(
                 (new FuseboxPlate()).set({
@@ -112,44 +141,5 @@ export default class Desert {
         state.fuseboxPlates = this.fuseboxPlates;
 
         return this.fuseboxes;
-    }
-
-    createControlBoard() {
-        state.controlBoard = (new ControlBoard()).set({
-            x: this.ground.x + inGridTiles(8),
-            y: this.ground.y + inGridTiles(9),
-        });
-
-        state.controlBoardPlate = (new ControlBoardPlate()).set({
-            x: state.controlBoard.x + inPixels(13),
-            y: state.controlBoard.y + state.controlBoard.height,
-            width: state.controlBoard.width - inPixels(17)
-        });
-
-        return [
-            state.controlBoard,
-            state.controlBoardPlate,
-        ];
-    }
-
-    createPlants() {
-        this.plants = [];
-
-        for (var i = 1; i <= 8; i++) {
-            this.plants.push((new Plant()).setKind(i).set({
-                x: this.ground.x + inGridTiles(3 + i ),
-                y: this.ground.y + inGridTiles(14),
-            }));
-        }
-        for (var i = 1; i <= 8; i++) {
-            this.plants.push((new Plant()).setKind(i).set({
-                x: this.ground.x + inGridTiles(5 + i ),
-                y: this.ground.y + inGridTiles(11),
-            }));
-        }
-
-        state.plants = this.plants;
-
-        return this.plants;
     }
 }

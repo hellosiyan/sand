@@ -7,16 +7,21 @@ export default class Timer extends Container {
     constructor() {
         super();
 
-        this.width = inPixels(30);
+        this.width = inPixels(100);
         this.height = inPixels(5);
         this.padding = inPixels(1);
 
+        this.isVisible = false;
         this.isRunning = false;
         this.timePassed = 0;
         this.timeLimit = 0;
     }
 
     draw(ctx) {
+        if (! this.isVisible) {
+            return;
+        }
+
         const timeCoeff = this.passedTimeCoeff();
 
         ctx.fillStyle = config.palettes.timer['0'];
@@ -37,6 +42,7 @@ export default class Timer extends Container {
     }
 
     start() {
+        this.isVisible = true;
         this.isRunning = true;
         return this;
     }
@@ -47,6 +53,7 @@ export default class Timer extends Container {
     }
 
     stop() {
+        this.isVisible = false;
         this.isRunning = false;
         this.timePassed = 0;
         return this;
@@ -66,7 +73,7 @@ export default class Timer extends Container {
     }
 
     passedTimeCoeff() {
-        return this.timePassed/this.timeLimit;
+        return this.timeLimit === 0 ? 0: this.timePassed/this.timeLimit;
     }
 
     setTimeLimit(seconds) {

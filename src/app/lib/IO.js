@@ -81,7 +81,7 @@ class IO {
 const io = new IO();
 
 io.KEY_SPACE = 32;
-io.KEY_ESC = 27;
-io.KEY_ENTER = 13;
+// io.KEY_ESC = 27;
+// io.KEY_ENTER = 13;
 
 export default io;

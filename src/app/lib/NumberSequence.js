@@ -1,5 +1,3 @@
-import Color from './Color';
-
 const prngs = {};
 
 export default class NumberSequence {
@@ -21,21 +19,14 @@ export default class NumberSequence {
         return result + 0.5;
     }
 
-    pick(candidates) {
-        if (! Array.isArray(candidates)) {
-            return this.pick(Object.keys(candidates));
+    randomBetween(min, max, round) {
+        let num = this.next() * (max - min + 1) + min;
+
+        if (round) {
+            num = Math.floor(num);
         }
 
-        let index = Math.floor(this.next() * candidates.length);
-        return candidates[index];
-    }
-
-    bool () {
-        return this.next() > 0.5;
-    }
-
-    color() {
-        return Color.fromRGB(Math.floor(this.next() * 256), Math.floor(this.next() * 256), Math.floor(this.next() * 256));
+        return num;
     }
 
     static set(key, seed) {

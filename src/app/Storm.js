@@ -24,8 +24,9 @@ export default class Storm extends Drawable {
         this.height = 0;
 
         this.level = 0;
+        this.targetLevel = false;
 
-        this.minParticles = 1;
+        this.minParticles = 10;
         this.maxParticles = 2000;
         this.numParticles = this.minParticles;
 
@@ -48,9 +49,25 @@ export default class Storm extends Drawable {
         this.level = level;
 
         this.numParticles = lerp(this.minParticles, this.maxParticles, this.level);
+
+        return this;
     }
 
+    levelUpTo(targetLevel) {
+        this.targetLevel = targetLevel;
+    }
+
+
     draw(ctx) {
+        if (this.targetLevel !== false) {
+            let newLevel = this.level + 0.005;
+            if (newLevel >= this.targetLevel) {
+                this.targetLevel = false;
+                setTimeout(() => state.events.emit('storm.target.reached'), 250);
+            }
+            this.setLevel(newLevel);
+        }
+
         while (this.particles.length < this.numParticles) {
             this.addParticle();
         }
@@ -67,7 +84,6 @@ export default class Storm extends Drawable {
         ctx.fillStyle = '#876701';
         ctx.globalAlpha = 1;
         ctx.globalCompositeOperation = 'source-over';
-
 
         let i = this.particles.length;
 

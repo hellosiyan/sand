@@ -58,20 +58,6 @@ export default class Drawable extends Settable() {
         return this;
     }
 
-    asCanvas() {
-        const canvas = new Canvas()
-            .setSize(this.width, this.height, false);
-
-        canvas.ctx.save();
-        canvas.ctx.translate(-1 * this.x, -1 * this.y);
-
-        this.draw(canvas.ctx);
-
-        canvas.ctx.restore();
-
-        return canvas;
-    }
-
     positionAtAncestor(ancestor) {
         let parent = this.parent;
         let position = {

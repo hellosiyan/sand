@@ -20,7 +20,7 @@ body {
 }
 
 canvas {
-	background: #fff;
+	background: #fbe58c;
 	outline: 1px solid black;
 	margin: 0 auto;
 	grid-area: main;
@@ -36,7 +36,7 @@ canvas {
     max-width: 80%;
     height: auto;
     padding: 30px;
-    background-color: #F6B18D;
+    background-color: #fbd649;
     color: #323251;
 }
 .text-overlay.hidden {
@@ -56,7 +56,7 @@ canvas {
     text-align: center;
 }
 .text-overlay button {
-    background-color: #DC657B;
+    background-color: #e57388;
     border: 0 none;
     width: 44px;
     height: 22px;

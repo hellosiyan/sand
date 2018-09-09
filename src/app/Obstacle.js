@@ -1,6 +1,7 @@
 import Rectangle from './lib/Rectangle';
 import Collidable from './lib/Collidable';
-import { inGridTiles } from './utils';
+import { inGridTiles, inPixels } from './utils';
+import { config } from './config';
 
 export default class Obstacle extends Collidable(Rectangle) {
     constructor() {
@@ -11,8 +12,17 @@ export default class Obstacle extends Collidable(Rectangle) {
     }
 
     draw(ctx) {
-        ctx.fillStyle = 'rgba(255,0,0,0.2)';
+        ctx.fillStyle = config.palettes.sand['1'];
         ctx.globalAlpha = 1;
         ctx.fillRect(this.x, this.y, this.width, this.height);
+    }
+
+    getCollisionBox() {
+        return {
+            left: this.x - inPixels(2),
+            right: this.x + this.width + inPixels(2),
+            top: this.y - inPixels(2),
+            bottom: this.y + this.height + inPixels(2),
+        };
     }
 }

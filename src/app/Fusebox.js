@@ -17,6 +17,7 @@ export default class Fusebox extends Collidable(Container) {
         this.element.alignWith(this).bottomEdges();
 
         this.isActive = false;
+        this.status = false; // ['correct', 'incorrect']
     }
 
     setLetter(letter) {
@@ -33,18 +34,27 @@ export default class Fusebox extends Collidable(Container) {
         this.isActive = true;
         this.element.rune.format = 'glowing';
 
-        state.events.emit('fusebox.activated', this.element.rune.letter);
+        state.events.emit('fusebox.activated', {
+            letter: this.element.rune.letter,
+            fusebox: this,
+        });
 
         return this;
     }
 
-    dectivate() {
+    setStatus(status) {
+        this.status = status;
+        this.element.rune.format = status;
+    }
+
+    deactivate() {
         if (! this.isActive) {
             return;
         }
 
         this.isActive = false;
-        this.element.rune.format = 'outlined';
+        this.state = false;
+        this.element.rune.format = 'normal';
 
         return this;
     }

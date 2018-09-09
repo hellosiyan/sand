@@ -23,6 +23,11 @@ export default function Listenable(baseClass) {
                 return;
             }
 
+            if (!handler) {
+                this.eventHandlers[event].splice(0, this.eventHandlers[event].length);
+                return;
+            }
+
             const index = this.eventHandlers[event].indexOf(handler);
 
             if (index < 0) {
@@ -30,6 +35,12 @@ export default function Listenable(baseClass) {
             }
 
             this.eventHandlers[event].splice(index, 1);
+        }
+
+        offAll() {
+            for(let event in this.eventHandlers) {
+                this.eventHandlers[event].splice(0, this.eventHandlers[event].length);
+            }
         }
 
         emit(event, data) {

@@ -52,10 +52,6 @@ export default class DrawCacheFactory {
     }
 
     getOverflowArea() {
-        if (! this.allOverflowDiscovered()) {
-            throw 'Overflow area not discovered. Call fitCanvasToDrawable() first.';
-        }
-
         return this.padding;
     }
 
@@ -107,13 +103,6 @@ export default class DrawCacheFactory {
                 padBy[direction] = this.padSize;
             }
         });
-
-        if (
-            shrinkBy.top === this.canvas.height
-            || shrinkBy.left === this.canvas.width
-        ) {
-            throw 'No graphics found within cache viewport';
-        }
 
         return { padBy, shrinkBy };
     }

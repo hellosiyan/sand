@@ -19,10 +19,6 @@ export default class AutoScrollView extends Container {
     }
 
     addChild (child) {
-        if (this.children.length >= 1) {
-            throw 'AutoScrollView cannot have more than one child';
-        }
-
         super.addChild(child);
     }
 
