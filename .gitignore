@@ -3,3 +3,4 @@ dist/
 *.sublime-project
 *.sublime-workspace
 inspiration/
+.idea
