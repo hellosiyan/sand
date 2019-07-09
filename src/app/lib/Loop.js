@@ -1,6 +1,6 @@
-// import Stats from './Stats';
+import Stats from './Stats';
 
-// const stats = Stats(0);
+const stats = Stats(0);
 
 export default class Loop {
 
@@ -11,7 +11,7 @@ export default class Loop {
         this.lastTime = this.timestamp();
         this.worker = () => {};
 
-        // document.body.appendChild(stats.dom);
+        document.body.appendChild(stats.dom);
     }
 
     start (worker) {
@@ -45,7 +45,7 @@ export default class Loop {
                 return;
             }
 
-            // this.showStats && stats.begin();
+            this.showStats && stats.begin();
 
             let now = this.timestamp();
             let dt = now - this.lastTime;
@@ -61,7 +61,7 @@ export default class Loop {
 
             this.tick(dt);
 
-            // this.showStats && stats.end();
+            this.showStats && stats.end();
         });
     }
 }
